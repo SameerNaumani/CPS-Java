@@ -1,0 +1,84 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package montecarlo;
+
+/**
+ *
+ * @author Sameer Naumani
+ * This program computes an estimate of pi by simulating dart throws onto a square
+ */
+import java.awt.Color;
+import java.awt.Graphics;
+import java.util.Random;
+import java.io.*;
+import java.util.Scanner;
+import javax.swing.JFrame;
+
+
+
+public class MonteCarlo extends JFrame{
+
+    /**
+     * @param args the command line arguments
+     */
+    public MonteCarlo(){
+        setTitle("MonteCarlo");
+        setSize(960,960);
+        setVisible(true);
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
+    }
+    
+    public void paint(Graphics g, int x, int y){
+        g.setColor(Color.RED);
+        g.drawLine(x, y, x, y);
+        
+        
+    }
+    
+    public static void main(String[] args) throws FileNotFoundException {
+        MonteCarlo m = new MonteCarlo();
+        m.paint(null);
+        
+        
+        final int TRIES = 10000;
+        Random generator = new Random();
+        String filename = "output.csv";
+        PrintWriter outputStream = new PrintWriter(filename);
+        
+     
+        int hits = 0;
+        for(int i = 1; i <= TRIES; i++)
+        {
+            //Generate two random numbers between -1 and 1
+            
+            double r = generator.nextDouble();
+            double x = -1 + 2*r;
+            r = generator.nextDouble();
+            double y = -1 + 2*r;
+            m.paint(null, x,y);
+            //Check wether the point lies in the unit circle
+            if (x*x + y*y <= 1){
+                hits ++;
+            }
+            
+            /* 
+                The ratio hits/tries is approximately the same as the ratio
+                circle area/square area = pi/4
+            */
+            
+            double piEstimate = 4.0 * hits/TRIES;
+            System.out.println("Estimate for pi: " + piEstimate);
+            outputStream.println(i + "," + piEstimate); //stores in RAM first
+            
+        }
+        outputStream.close(); //flushes data to file
+    }
+    
+}
+
+
+
+
